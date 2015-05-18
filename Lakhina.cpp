@@ -25,6 +25,43 @@ struct Fileinfo {
 };
 
 vector<Fileinfo> compare_lists(vector<Fileinfo> newfl, vector<Fileinfo> oldfl) {
+	
+	cout << "Do you want to save in .bsr as a reserve?"
+	<< endl;
+	
+	string x;
+	getline(cin, x);
+	
+	if (x=="1") {
+			string value1;
+	string value2;
+	string value3;
+	std::ifstream ofs("result.bsr");
+	boost::archive::text_iarchive oa(ofs);
+	std::string test;
+	Fileinfo it1;
+	while (true) {
+		try
+		{
+
+			for (int i = 1; i < 1000000000000000;) {  //Запись, просто по сделанным методам протобафа
+				oa >> it1.path;
+				oa >> std::to_string(it1.size);
+				oa >> it1.hash; 
+
+				oldfl.push_back(it1);
+			}
+
+		}
+		catch (boost::archive::archive_exception& ex)
+		{
+			break;
+		}
+	}
+	ofs.close();
+		
+	}
+	
 	for (vector<Fileinfo>::iterator itnew = newfl.begin(); itnew < newfl.end(); itnew++) {
 		for (vector<Fileinfo>::iterator itold = oldfl.begin(); itold < oldfl.end(); itold++) {
 			if ((itnew->path == itold->path) && (itnew->hash == itold->hash)) {
@@ -50,15 +87,20 @@ vector<Fileinfo> compare_lists(vector<Fileinfo> newfl, vector<Fileinfo> oldfl) {
 
 void SaveBson(string filename, vector<Fileinfo> vec_finfo){
 	mongo::BSONArrayBuilder array;
+	int k = 0;
 	for (Fileinfo it : vec_finfo){
 		bson::bob element;
 		element.append("path", it.path);
 		element.append("size", it.size);
 		element.append("hash", it.hash);
-
+		
+		k = k + it.size;
+		
 		//mongo::BSONArrayBuilder array1;
 		array.append(element.obj());
 	}
+
+		cout << "General size: " << k << endl;
 
 	bson::bo serializedArray = array.arr();
 
