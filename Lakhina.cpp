@@ -9,6 +9,9 @@
 #include "keccak.h"
 #include <sstream>
 
+//Main Commit
+cout << "Well";
+
 using namespace std;
 namespace fs = boost::filesystem;
 
